@@ -15,8 +15,8 @@ from hdbcli import dbapi
 serverAddress='qadb.wdf.sap.corp'
 #serverAddress='qadb-test.wdf.sap.corp'
 serverPort=30015
-userName='READER'
-passWord='help2Read!'
+userName='---'
+passWord='----'
 
 #Get date/time as filename
 getCurrentDateTime=str(datetime.now())
