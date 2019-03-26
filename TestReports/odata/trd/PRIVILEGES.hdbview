@@ -1,0 +1,9 @@
+schema="EIMTRD";
+query="select
+	 PRIVILEGE 
+from EFFECTIVE_PRIVILEGES 
+where USER_NAME = CURRENT_USER 
+and SCHEMA_NAME = 'EIMTRD' 
+and OBJECT_TYPE = 'SCHEMA' 
+and PRIVILEGE = 'DELETE'";
+

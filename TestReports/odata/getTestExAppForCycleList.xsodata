@@ -1,0 +1,2 @@
+service { "EIMTRD"."TestReports.odata.trd::EXTERNAL_APP_FOR_CYCLE_LIST" as "LIST" keys ("CYC_TAG");
+}

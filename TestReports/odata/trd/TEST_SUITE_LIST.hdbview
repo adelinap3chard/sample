@@ -1,0 +1,10 @@
+schema="EIMTRD";
+query="select
+	 a.TS_ID,
+	 a.TS_NAME,
+	 a.TS_DESC,
+	 CASE WHEN d.PRO_NAME IS NULL THEN 'DUCK_TAPE' ELSE d.PRO_NAME END AS PRO_NAME,
+	 CAST (NULL AS VARCHAR(200)) NEW_TS_NAME 
+from EIMTRD.ETRD_TEST_SUITES a LEFT OUTER JOIN (select distinct p.TS_NAME, c.PRO_NAME
+         from EIMTRD.ETRD_TEST_PLAN p INNER JOIN EIMTRD.ETRD_PRODUCTS c on p.pro_id = c.pro_id) d on a.ts_name = d.ts_name
+ORDER BY TS_NAME";

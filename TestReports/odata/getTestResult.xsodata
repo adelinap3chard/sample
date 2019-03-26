@@ -1,0 +1,2 @@
+service { "EIMTRD"."TestReports.odata.trd::TEST_RESULTS" as "LIST" keys ("PLATFORM", "PRODUCT", "VERSION", "TESTCASE", "TEST_STATUS", "TESTER", "SCH_DATE", "EXEC_TIME", "CYCLE_NAME","BUG_ID" );
+}

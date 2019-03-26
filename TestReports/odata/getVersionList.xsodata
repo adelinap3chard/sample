@@ -1,0 +1,2 @@
+service { "EIMTRD"."TestReports.odata.trd::PRODUCT_VERSION_LIST" as "LIST" keys ("PRODUCT", "VERSION");
+}

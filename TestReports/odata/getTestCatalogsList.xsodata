@@ -1,0 +1,5 @@
+service { "EIMTRD"."ETRD_TEST_CATALOGS" as "LIST"
+	create using "TestReports.odata.trd:CreateTestCatalogs.xsjslib::CreateTestCatalogs"
+    update using "TestReports.odata.trd:UpdateTestCatalogs.xsjslib::UpdateTestCatalogs";
+
+}

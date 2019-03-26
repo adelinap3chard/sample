@@ -1,0 +1,4 @@
+service { "EIMTRD"."TestReports.odata.trd::TEST_CASE_BY_SUITE_LIST" as "LIST" keys ("TS_NAME", "TC_NAME");
+}
+
+

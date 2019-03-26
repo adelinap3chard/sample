@@ -1,0 +1,906 @@
+<!DOCTYPE HTML>
+<html> 
+      <head>
+      		<meta name="viewport" content="minimal-ui, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+            <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+            <meta charset="UTF-8"/>
+            <meta name="keywords" content="Control Shell" />
+       		<META HTTP-EQUIV="Pragma" CONTENT="no-cache">
+       		<meta http-equiv="Cache-control" content="no-cache">
+			<META HTTP-EQUIV="Expires" CONTENT="0">
+
+            <title>BDH Test Reports </title>
+            
+                          <style type="text/css">  
+		        .green {  
+		            background-color: #66FF33;   
+		        }  
+		        .red {  
+		            background-color: #FF3300;  
+		        }  
+		        .yellow {  
+		            background-color: #FFFF66;  
+		        }
+		        .sapUiFormEdit.sapUiFormM .sapUiRespGridMedia-Std-Phone.sapUiFormResGridCont>.sapUiFormResGridLbl:not(.sapUiRespGridSpanS12), .sapUiFormEdit.sapUiFormM .sapUiRespGridMedia-Std-Tablet.sapUiFormResGridCont>.sapUiFormResGridLbl:not(.sapUiRespGridSpanM12), .sapUiFormEdit.sapUiFormM .sapUiRespGridMedia-Std-Desktop.sapUiFormResGridCont>.sapUiFormResGridLbl:not(.sapUiRespGridSpanL12) {
+		            padding-top: 0rem;
+		        }
+		        .sapUiRespGridMedia-Std-Desktop.sapUiRespGridHSpace0>.sapUiRespGridSpanL8,
+		        .sapUiRespGridMedia-Std-Desktop.sapUiRespGridHSpace0>.sapUiRespGridSpanL10 {
+    				padding-top: 0rem;
+				}
+		        .sapMPanelBG.sapMPanelContent.sapMPanelExpandablePart {
+		        	margin-left: 1rem;
+		        }
+		        .sapMPanelHdrExpandable {
+		        	margin-left: 1rem;
+		        }
+		        .sapMPanelExpandableIcon {
+		        	position: absolute;
+		        }
+		        
+	    	</style>
+
+			<script type="text/javascript" src="lib/utilities.js"></script>
+			<script type="text/javascript" src="lib/jszip.js"></script>
+            <script type="text/javascript" src="lib/xlsx.js"></script>
+            <script type="text/javascript" src="lib/FileSaver.js"></script>
+            <script type="text/javascript" src="lib/date.js"></script>
+            <script type="text/javascript" src="lib/lodash.min.js"></script>
+            <script type="text/javascript" src="lib/idle.min.js"></script>
+            
+            <!-- use src="/sap/ui5/1/resources/sap-ui-core-dbg.js" FOR DEBUGGING -->
+            <script id="sap-ui-bootstrap" type="text/javascript"
+                  src="/sap/ui5/1/resources/sap-ui-core.js"
+                  data-sap-ui-libs="sap.ui.commons, sap.ui.layout, sap.ui.ux3, sap.ui.table, sap.m , sap.viz"
+                  data-sap-ui-theme="sap_goldreflection" 
+                  data-sap-ui-resourceroots='{
+                        "TestReports": "./"
+                  }'>
+            </script>
+            <!-- sap.suite.ui.commons data-sap-ui-theme="sap_goldreflection" data-sap-ui-theme="sap_bluecrystal" -->       
+            <!-- add sap.ui.table,sap.ui.ux3 and/or other libraries to 'data-sap-ui-libs' if required -->
+            
+            
+            <script>
+            
+                  var oHTML = new sap.ui.core.HTML("myContent",{
+                        content: '<div>'+
+                    '<div id="sample1code" ><br><br>Hello! <br><br> Welcome to BDH infrastructure. This is an entry to BDH test statistic page.  '+
+                    'You can find this data in tables and charts. We (BDH Infra (US)) created this page to simplify the analysis of trends within the test cycle process. '+
+                    'If you have any questions or ideas for improvement, please feel free to send your request on our wiki page:  <br> <a href="https://jam4.sapjam.com/groups/about_page/oVpmUa55yTVGjyEBd9VJGO" target="_blank ">HANA BDH Infrastructure Development</a> '+ 
+                    '<br><br> Best regards,<br>your HANA BDH Infrastructure (US) team</div>'+'</div>'
+                  });
+                  
+                  oHTML.addEventDelegate({
+                        onAfterRendering: function(){
+                              //oShell.setContent(oMessage);
+                              //sap.ui.getCore().byId("csc1").placeAt("sample1code");
+                        },
+                  });
+
+                  oMessage = new sap.ui.commons.TextView("myMessage",{
+                        text: "This page is under construction"
+                  });
+                  
+                  oInstruction = new sap.ui.core.HTML("regInstruction",{
+                      content: '<div>'+
+                        "<div> Before running test, user requires to register test plan, cycle, suite, case, test user and releated test info if user haven't registered using command-line API tool. <br><br>"+ 
+                        "User must register in the following order: <br><br>" +
+                        "<li> Test Case</li>"+
+                        "<li> Test Suite - here after registering suite, user can select test case(s) and add them to test suite</li>"+
+                        "<li> Test Cycle</li>"+
+                        "<li> Test Product</li>"+
+                        "<li> Test External App </li>"+
+                        "<li> Test Group</li>"+
+                        "<li> Test Plan</li>"+
+                        "</div>"+
+                        
+                        "<p><div></div></p>"    
+                  });
+                  
+                  var loginView = sap.ui.view({
+                  	id : "loginView",
+                  	viewName : "TestReports.forms.login",
+                  	type : sap.ui.core.mvc.ViewType.JS
+                  });
+                  
+                  var loginDialog = new sap.ui.commons.Dialog({
+        	        id : "loginDialog",
+      	  			modal : true,
+      	  		  });
+                  
+                  var linkDialog = new sap.ui.commons.Dialog({
+        	          id : "linkDialog",
+      	  			  modal : true,
+      	  			  width: "98%",
+    	  			  height: "80%",
+      				  beginButton: new sap.ui.commons.Button({
+      					 text: 'Close',
+      					 press: function () {
+      						 dialog.close();
+      					 }
+      				  })
+      	  		  });
+
+                  var linkView3 = sap.ui.view({
+	       		       id : "link_lifetimeTestCaseLink",
+	       		       viewName : "TestReports.reports.link.lifetimeTestcaselink",
+	       		       type : sap.ui.core.mvc.ViewType.JS
+	       	      });
+                  
+                  var linkView1 = sap.ui.view({
+	       		       id : "link_testCaseLink",
+	       		       viewName : "TestReports.reports.link.testcaselink",
+	       		       type : sap.ui.core.mvc.ViewType.JS
+	       	      });
+                  
+                  var linkView2 = sap.ui.view({
+        	          id : "link_detailResultCycleLink",
+        	          viewName : "TestReports.reports.link.detailResultCycleLink",
+        	          type : sap.ui.core.mvc.ViewType.JS
+        	      });
+
+                  var linkView4 = sap.ui.view({
+                	  id : "link_lifetimeDetailResultCycleLink",
+                	  viewName : "TestReports.reports.link.lifetimeDetailResultCycleLink",
+                	  type : sap.ui.core.mvc.ViewType.JS
+       	      	  });
+                  
+                  var linkView5 = sap.ui.view({
+                      id : "link_suiteByCycleLink",
+                      viewName : "TestReports.reports.link.suiteByCycleLink",
+                     type : sap.ui.core.mvc.ViewType.JS
+        	      });
+                  
+                  var linkView6 = sap.ui.view({
+                      id : "link_suiteByProductLink",
+                      viewName : "TestReports.reports.link.suiteByProductLink",
+                     type : sap.ui.core.mvc.ViewType.JS
+        	      });
+
+                  var linkView10 = sap.ui.view({
+                      id : "link_suiteByProductVersionFeatureLink",
+                      viewName : "TestReports.reports.link.suiteByProductVersionFeatureLink",
+                     type : sap.ui.core.mvc.ViewType.JS
+        	      });   
+                  
+                  var linkView7 = sap.ui.view({
+                      id : "link_productVersionLink",
+                      viewName : "TestReports.reports.link.productVersionLink",
+                     type : sap.ui.core.mvc.ViewType.JS
+        	      });
+                  
+                  var linkView8 = sap.ui.view({
+                      id : "link_featureSuiteLink",
+                      viewName : "TestReports.reports.link.featureSuiteLink",
+                     type : sap.ui.core.mvc.ViewType.JS
+        	      });
+                  
+                  var linkView9 = sap.ui.view({
+                      id : "link_failCaseLink",
+                      viewName : "TestReports.reports.link.failCaseLink",
+                     type : sap.ui.core.mvc.ViewType.JS
+        	      });
+      			
+  
+                  //********************************************************
+                  //oHTML =  sap.ui.view({
+                  //      id : "LogOverallTest",
+                  //      viewName : "TestReports.forms.overview",
+                  //      type : sap.ui.core.mvc.ViewType.JS
+                  //});
+                  
+                  //**********************************************************
+                  //manual input overview test record
+                  oLogOverallTest =  sap.ui.view({
+                        id : "LogOverallTest",
+                        viewName : "TestReports.forms.overview",
+                        type : sap.ui.core.mvc.ViewType.JS
+                  });
+                  
+                  oLogDetailTest =  sap.ui.view({
+                      id : "LogDetailest",
+                      viewName : "TestReports.forms.detail",
+                      type : sap.ui.core.mvc.ViewType.JS
+                  });
+                  
+                  //**********************************************************
+                  //overview report
+                  //oOverAllReportableView = sap.ui.view({
+                  //      id : "OverallTestReport",
+                  //      viewName : "TestReports.reports.archive",
+                  //      //viewName : "TestReports.reports.sumCycleReport",
+                  //      type : sap.ui.core.mvc.ViewType.JS
+                  //});
+                  // Summary by cycle report
+                  oSummaryReportView = sap.ui.view({
+                      id : "SummaryTestReport",
+                      viewName : "TestReports.reports.sumCycleReport",
+                      type : sap.ui.core.mvc.ViewType.JS
+                  });
+                  
+                  // catalog by cycle report
+                  oCatalogByCycleReportView = sap.ui.view({
+                      id : "CatalogByCycleTestReport",
+                      viewName : "TestReports.reports.sumCatalogbyCycleReport",
+                      type : sap.ui.core.mvc.ViewType.JS
+                  });
+                
+                  // Suite by cycle report
+                  oSuiteByCycleReportView = sap.ui.view({
+                      id : "SuiteByCycleTestReport",
+                      viewName : "TestReports.reports.suiteByCycleReport",
+                      type : sap.ui.core.mvc.ViewType.JS
+                  });
+                
+                  //test plan by cycle report
+                  oTestPlanReportView = sap.ui.view({
+                        id : "TestPlanReport",
+                        viewName : "TestReports.reports.testplanreport",
+                        type : sap.ui.core.mvc.ViewType.JS
+                  });
+                  
+                  //test case report
+                  oTestCaseReportView = sap.ui.view({
+                        id : "TestCaseReport",
+                        viewName : "TestReports.reports.testcasereport",
+                        type : sap.ui.core.mvc.ViewType.JS
+                  });
+                  
+                  //detail Case by cycle report
+                  oDetailResultCycleReport = sap.ui.view({
+                        id : "DetailResultcycleReport",
+                        viewName : "TestReports.reports.detailResultCycleReport",
+                        type : sap.ui.core.mvc.ViewType.JS
+                  });
+                                  
+                  //details report
+                  oDetailReportTableView = sap.ui.view({
+                        id : "DetailTestReport",
+                        viewName : "TestReports.reports.testresults",
+                        type : sap.ui.core.mvc.ViewType.JS
+                  });
+                  
+                  //product report
+                  oSumByProductReport = sap.ui.view({
+                        id : "cycleByProductReport",
+                        viewName : "TestReports.reports.sumByProductReport",
+                        type : sap.ui.core.mvc.ViewType.JS
+                  });
+                  
+                  //execute user report
+                  oCycleByUserReport = sap.ui.view({
+                        id : "cycleByUserReport",
+                        viewName : "TestReports.reports.sumCycleByUserReport",
+                        type : sap.ui.core.mvc.ViewType.JS
+                  });
+
+                  //**********************************************************
+                  //test case
+                  oTestCase =  sap.ui.view({
+                        id : "TestCase",
+                        viewName : "TestReports.forms.testcase",
+                        type : sap.ui.core.mvc.ViewType.JS
+                  });
+                  
+                  //test suite
+                  oTestSuite = sap.ui.view({
+                        id : "TestSuite",
+                        viewName : "TestReports.forms.testsuite",
+                        type : sap.ui.core.mvc.ViewType.JS
+                  });
+                  
+                  //test plan
+                  oTestPlan = sap.ui.view({
+                        id : "TestPlan",
+                        viewName : "TestReports.forms.testplan",
+                        type : sap.ui.core.mvc.ViewType.JS
+                  });
+                  
+                  //test CYCLE
+                  oTestCycle = sap.ui.view({
+                        id : "TestCycle",
+                        viewName : "TestReports.forms.testcycle",
+                        type : sap.ui.core.mvc.ViewType.JS
+                  });
+                  
+                  //test external App
+                  oExApp = sap.ui.view({
+                        id : "TestExApp",
+                        viewName : "TestReports.forms.testexapp",
+                        type : sap.ui.core.mvc.ViewType.JS
+                  });
+                  
+                  //test product
+                  oProduct = sap.ui.view({
+                        id : "TestProduct",
+                        viewName : "TestReports.forms.testproduct",
+                        type : sap.ui.core.mvc.ViewType.JS
+                  });
+                  
+                  //test feature
+                  oFeature = sap.ui.view({
+                        id : "TestFeature",
+                        viewName : "TestReports.forms.testfeature",
+                        type : sap.ui.core.mvc.ViewType.JS
+                  });
+                  
+                  //test catalog
+                  oCatalog = sap.ui.view({
+                        id : "TestCatalog",
+                        viewName : "TestReports.forms.testcatalogs",
+                        type : sap.ui.core.mvc.ViewType.JS
+                  });
+                  
+                  //test group
+                  oGroup = sap.ui.view({
+                        id : "TestGroup",
+                        viewName : "TestReports.forms.testgroup",
+                        type : sap.ui.core.mvc.ViewType.JS
+                  });
+                  
+                  //test user
+                  oUser = sap.ui.view({
+                        id : "TestUser",
+                        viewName : "TestReports.forms.testuser",
+                        type : sap.ui.core.mvc.ViewType.JS
+                  });
+                                    
+                  //cycleplan
+                  oTestCyclePlan = sap.ui.view({
+                        id : "TestCyclePlan",
+                        viewName : "TestReports.forms.testcycleplan",
+                        type : sap.ui.core.mvc.ViewType.JS
+                  });
+                
+                  //test 
+                  oTest = sap.ui.view({
+                        id : "Test",
+                        viewName : "TestReports.forms.test",
+                        type : sap.ui.core.mvc.ViewType.JS
+                  });
+                  
+                  //test 1
+                  oTest1 = sap.ui.view({
+                        id : "Test1",
+                        viewName : "TestReports.forms.test1",
+                        type : sap.ui.core.mvc.ViewType.JS
+                  });
+                  
+                  
+                  //**********************************************************
+                  //Charts
+                  oTestProcessChart = sap.ui.view({
+                        id : "TestProcessChart",
+                        viewName : "TestReports.chart.testResults.TestChart",
+                        type : sap.ui.core.mvc.ViewType.XML
+                  });
+                  
+                  oTestLengthChart = sap.ui.view({
+                        id : "TestLengthChart",
+                        viewName : "TestReports.chart.testResults.Chart",
+                        type : sap.ui.core.mvc.ViewType.JS
+                  });
+      
+                  oButton= new sap.ui.commons.Button("myButton",{
+                        text: "Click me!",
+                        tooltip: "please click me",
+                        press: function(oEvent){alert("Thank you for clicking me!");}
+                  });
+
+                  oImage=  new sap.ui.commons.Image("myImage",{
+                        src: "images/SAPLogo.gif",
+                        width: "100%",
+                        alt: "Hete should be an image.",
+                        tooltip: "BDH",
+                        decorative: false
+                  });
+
+                  //var oAPI = new sap.ui.core.HTML({content : " <iframe id='API' style='width:100%;height:100%;z-index:-1' width='100%' height='100%' src='https://jam4.sapjam.com/wiki/show/SulKCyVY4c8CnpXsHiQ3UB'></iframe>" });
+                  //var oHTML = new sap.ui.core.HTML("myContent",{
+                  var oAPI = sap.ui.view({
+                      id : "apiHTML",
+                      viewName : "TestReports.apiDoc",
+                      type : sap.ui.core.mvc.ViewType.HTML
+                  });
+                  
+                  
+                  var oFAQ = sap.ui.view({
+                      id : "faqHTML",
+                      viewName : "TestReports.FAQ",
+                      type : sap.ui.core.mvc.ViewType.JS
+                  });
+                  
+                  var dummyDate = new sap.ui.commons.DatePicker('dummy_date');
+                  dummyDate.__proto__._formatValue = function(oDate) {
+          			var oFormat = sap.ui.core.format.DateFormat.getInstance({pattern: "yyyy-MM-dd", strictParsing: true, relative: false}, null);
+          			// convert to date object
+          			var sValue = oFormat.format(oDate);
+          			return sValue;
+
+          		  };
+          		  
+          		  var oStorage = jQuery.sap.storage(jQuery.sap.storage.Type.local);
+          		  var oModel = getODataModel("/Product", "/TestReports/odata/getProductList.xsodata");
+            	  var oDropdownBoxProduct = getDropdownWithModel("ProductFilter", "PRO_NAME", oModel);
+          	      oDropdownBoxProduct.setWidth("200px");
+          	  	  oDropdownBoxProduct.attachChange(function() {
+        			  var filter = oDropdownBoxProduct.getValue();
+        	    	  oStorage.put("ProductFilter", filter);
+        	    	  oShell.setContent(oShell.getContent());
+        		  });
+          	  	  oDropdownBoxProduct.addEventDelegate({
+                      onAfterRendering: function() {
+                    	  //setProductFilter();
+                      }
+          	  	  });
+          	  	  
+              	//refresh button
+
+            	var oRefresh = new sap.ui.commons.Button("Refresh",{
+            		text: "",
+              		//style: sap.ui.commons.ButtonStyle.Accept,
+              		style: sap.ui.commons.ButtonStyle.Emph,
+              		icon: "sap-icon://future",
+              		tooltip: "Refresh Report",
+              		press: function() {
+              			url = "/TestReports/UIRefreshconsolidate.xsjs";
+        				//getModelWithDataASYNC(url, null, null);
+        				getModelWithDataASYNC(url, function() {
+        					clearODataModel();
+        					var oShell = sap.ui.getCore().byId("myShell");
+        					oShell.setContent(oShell.getContent());
+        					sap.ui.commons.MessageBox.alert("Report refreshed successfully!",'',"Success");
+                            },function(e){
+                            	//oTable.setModel(refreshCycles());
+                            	clearODataModel();
+        						var oShell = sap.ui.getCore().byId("myShell");
+        						oShell.setContent(oShell.getContent());
+                            	sap.ui.commons.MessageBox.alert("Report refreshed successfully!",'',"Success");
+                            }
+                        ); 
+                    }
+            	});
+            </script>
+
+<script id='Script1'>
+sap.ui.localResources("TestReports");
+
+jQuery.sap.require("sap.ui.core.routing.Router");
+jQuery.sap.require("sap.ui.core.routing.HashChanger");
+
+var oShell = new sap.ui.ux3.Shell("myShell", {
+      appTitle: "BDH Infrastructure - Test Reporting",
+      appIcon: "images/SAPLogo.gif",
+      appIconTooltip: "SAP logo",
+      showLogoutButton: true,
+      showSearchTool: false,
+      showInspectorTool: false,
+      showFeederTool: false,
+      fullHeightContent : true,
+
+      worksetItems: [new sap.ui.ux3.NavigationItem("home",{key:"home",text:"Home"}),
+                    
+                     new sap.ui.ux3.NavigationItem("WI_2",{key:"wi_2",text:"Registration", subItems:[
+                        //new sap.ui.ux3.NavigationItem("WI_2_1",{key:"wi_2_1",text:"Info"}),
+                        //new sap.ui.ux3.NavigationItem("WI_2_2",{key:"wi_2_2",text:"Case"}),
+                        new sap.ui.ux3.NavigationItem("reg_suite",{key:"reg_suite",text:"Suite"}),
+                        new sap.ui.ux3.NavigationItem("reg_feature",{key:"reg_feature",text:"Feature"}),
+                        new sap.ui.ux3.NavigationItem("reg_catalog",{key:"reg_catalog",text:"Catalog"}),
+                        new sap.ui.ux3.NavigationItem("reg_product",{key:"reg_product",text:"Product"}),
+                        new sap.ui.ux3.NavigationItem("reg_external_app",{key:"reg_external_app",text:"External App"}),
+                        new sap.ui.ux3.NavigationItem("reg_group",{key:"reg_group",text:"Group"}),
+                        new sap.ui.ux3.NavigationItem("reg_user",{key:"reg_user",text:"User"}),
+                        new sap.ui.ux3.NavigationItem("reg_cycle",{key:"reg_cycle",text:"Cycle"}),
+                        new sap.ui.ux3.NavigationItem("reg_plan",{key:"reg_plan",text:"Test Plan"}),
+                        new sap.ui.ux3.NavigationItem("WI_2_10",{key:"wi_2_10",text:"Test cycle Plan"}),
+                        //new sap.ui.ux3.NavigationItem("WI_2_11",{key:"wi_2_11",text:"Test"}),
+                        //new sap.ui.ux3.NavigationItem("WI_2_12",{key:"wi_2_12",text:"Test2"})
+                        ]}), //end of item
+                        
+                     new sap.ui.ux3.NavigationItem("WI_1",{key:"wi_1",text:"Log Result", subItems:[
+						//new sap.ui.ux3.NavigationItem("WI_1_1",{key:"wi_1_1",text:"LogArchive"}),          
+						new sap.ui.ux3.NavigationItem("log_result",{key:"log_result",text:"Log Test Result"})
+						]}),    //end of item
+                                                                                          
+                     new sap.ui.ux3.NavigationItem("WI_3",{key:"wi_3",text:"Reports", subItems:[
+                        //new sap.ui.ux3.NavigationItem("WI_3_1",{key:"wi_3_1",text:"Archive"}),
+                        //new sap.ui.ux3.NavigationItem("rpt_summary",{key:"rpt_summary",text:"Summary By Cycle"}),
+                        new sap.ui.ux3.NavigationItem("rpt_summary",{key:"rpt_summary",text:"Summary By Cycle"}),//09-20-2017 catalog renamed to summary by request 
+                        new sap.ui.ux3.NavigationItem("rpt_suite",{key:"rpt_suite",text:"Suite By Cycle"}),
+                        new sap.ui.ux3.NavigationItem("rpt_detail",{key:"rpt_detail",text:"Detail By Cycle"}),
+                        new sap.ui.ux3.NavigationItem("rpt_result",{key:"rpt_result",text:"Result By Case"}),
+                        new sap.ui.ux3.NavigationItem("rpt_plan",{key:"rpt_plan",text:"Info Plan By Cycle"}),
+                        new sap.ui.ux3.NavigationItem("rpt_product",{key:"rpt_product",text:"Summary By Product"}),
+                        new sap.ui.ux3.NavigationItem("rpt_user",{key:"rpt_user",text:"Summary By Test User"})
+                        //new sap.ui.ux3.NavigationItem("WI_3_7",{key:"wi_3_7",text:"DetailResults"})
+                        ]}),
+                        
+                
+                     new sap.ui.ux3.NavigationItem("WI_4",{key:"wi_3",text:"Statistics", subItems:[
+                        new sap.ui.ux3.NavigationItem("chart_overview",{key:"chart_overview",text:"Overview"}),
+                        new sap.ui.ux3.NavigationItem("WI_4_2",{key:"wi_4_2",text:"Details"})
+                        
+                        ]}), //end of item
+                        
+                     new sap.ui.ux3.NavigationItem("WI_API",{key:"wi_api",text:"API Documentation"}), //
+                     
+                     new sap.ui.ux3.NavigationItem("WI_FAQ",{key:"wi_faq",text:"FAQ"})], //
+                              
+      paneBarItems: [ new sap.ui.core.Item("PI_Date",{key:"pi_date",text:"date"}),
+                      new sap.ui.core.Item("PI_Browser",{key:"pi_browser",text:"browser"})],
+      content: oHTML,
+      headerItems: [new sap.ui.commons.Label({text:"Product:"}), oDropdownBoxProduct, oRefresh, 
+                    new sap.ui.commons.MenuButton({text: "Help",tooltip: "Help Menu", menu: new sap.ui.commons.Menu("menu1",
+                    		{items:[new sap.ui.commons.MenuItem("menuitem1",{text:"Help"}),
+                                    new sap.ui.commons.MenuItem("menuitem2",{text:"Report Incident"}),
+                                    new sap.ui.commons.MenuItem("menuitem3",{text:"About"})]})
+					})],
+      worksetItemSelected: function(oEvent){
+            var sId = oEvent.getParameter("id");
+            var oShell = oEvent.oSource;
+            switch (sId) {
+            //home tab - HOME MESSAGE
+            case "home":
+                  	oShell.setContent(oHTML);
+                  	break;
+                  
+            //first tab - Overview page
+            case "WI_1_1":
+                  	//oShell.setContent(oMessage);
+                  	oShell.setContent(oLogOverallTest);
+                  	break;
+            case "log_result":
+            	  	//oShell.setContent(oMessage);
+                  	oShell.setContent(oLogDetailTest);
+                  	break;
+      
+            //second tab - details page
+            case "WI_2_1":
+                  //oShell.setContent(oOverAllReportableView);
+                  	oShell.setContent(oInstruction);
+                  	break;
+            case "reg_case":
+                  	oShell.setContent(oTestCase);
+                  	break;
+            case "reg_suite":
+                  	oShell.setContent(oTestSuite);
+                  	break;   
+            case "reg_feature":
+            		oShell.setContent(oFeature);
+              		break;   
+            case "reg_catalog":
+        		oShell.setContent(oCatalog);
+          		break;               		
+            case "reg_product":
+                  	oShell.setContent(oProduct);
+                  	break;      
+            case "reg_external_app":
+                  	oShell.setContent(oExApp);
+                 	break;      
+            case "reg_group":
+                  	oShell.setContent(oGroup);
+                  	break;      
+            case "reg_user":
+                	oShell.setContent(oUser);
+                	break;
+            case "reg_cycle":
+              		oShell.setContent(oTestCycle);
+              		break;                 	
+            case "reg_plan":
+            		oShell.setContent(oTestPlan);
+            		break;        
+            case "WI_2_10":
+        		oShell.setContent(oTestCyclePlan);
+        		break;        
+            case "WI_2_11":
+        			oShell.setContent(oTest);
+        			break;
+            case "WI_2_12":
+        			oShell.setContent(oTest1);
+        			break;    
+        		
+            //third tab - REPORTS
+            case "WI_3_1":
+                  	oShell.setContent(oOverAllReportableView); //archive
+                  	//oShell.setContent(oMessage);
+                  	break;     
+                  
+            //case "rpt_summary":
+            //    	oShell.setContent(oSummaryReportView); // Summary by cycle
+            //    	break;     
+
+            case "rpt_summary": //09/20/2017: rpt_catalog rename to summary due to summary is being hidden per request
+            	oShell.setContent(oCatalogByCycleReportView); // catalog by cycle
+            	break;
+                	
+            case "rpt_suite":
+            	oShell.setContent(oSuiteByCycleReportView); // Summary by cycle
+            	break;             
+            
+            case "rpt_detail":
+              		oShell.setContent(oDetailResultCycleReport); //detail by cycle
+              		break;
+              	
+            case "rpt_result":
+              		oShell.setContent(oTestCaseReportView); // detail by case
+              		break;
+              	
+            case "rpt_plan":
+                  	oShell.setContent(oTestPlanReportView); // plan info
+                  	break;
+                  
+            case "WI_3_8":
+              		oShell.setContent(oDetailReportTableView);
+              		break;
+              		
+            case "rpt_product":
+          		oShell.setContent(oSumByProductReport);
+          		break;
+          		
+            case "rpt_user":
+          		oShell.setContent(oCycleByUserReport);
+          		break;              	              		
+                  	
+            //third tab - STATISTICS
+            case "chart_overview":
+                  	oShell.setContent(oTestLengthChart);
+                 	//oShell.setContent(oTextFunc);
+                  	break;      
+            case "WI_4_2":
+                  	oShell.setContent(oTestProcessChart);
+                  	break;
+            
+            case "WI_API":
+                  	oShell.setContent(oAPI);
+                  	break;
+                  	
+            case "WI_FAQ":
+              	oShell.setContent(oFAQ);
+              	break;
+              	
+            default:
+                  	break;
+            }
+      },
+      
+      paneBarItemSelected: function(oEvent){
+            var sKey = oEvent.getParameter("key");
+            var oShell = oEvent.oSource;
+            switch (sKey) {
+            case "pi_date":
+                  var oDate = new Date();
+                  oShell.setPaneContent(new sap.ui.commons.TextView({text:oDate.toLocaleString()}), true);
+                  break;
+            case "pi_browser":
+                  oShell.setPaneContent(new sap.ui.commons.TextView({text:"You browser provides the following information:\n"+navigator.userAgent}), true);
+                  break;
+            default:
+                  break;
+            }
+      },
+      
+    
+      logout:function(){
+    	  
+    	  $.ajax({
+    	        url: "/TestReports/logout.xscfunc",
+    	        type: "POST",
+    	        success: function(ret) {
+    	            document.location.reload(true);
+    	        }
+    	    }); 
+    	  
+      },
+     search:function(oEvent){
+           alert("Search triggered: " + oEvent.getParameter("text"));
+     },
+     feedSubmit:function(oEvent){
+           alert("Feed entry submitted: " + oEvent.getParameter("text"));
+     },
+     paneClosed : function(oEvent) {
+    	 var id = oEvent.getParameter("id");
+     }
+});
+
+var mContent = {}; // a map to remember page content once it is created
+ function getContent(key) {
+	if (mContent[key])
+		return mContent[key]; // if content is already created, return it directly
+	switch (key) {
+   
+   case "home":
+   	mContent[key] = oHTML;
+   break;
+         
+   case "WI_1_1":
+   	mContent[key] = oLogOverallTest;
+   break;
+   
+   case "log_result":
+   	mContent[key] = (oLogDetailTest);
+   break;
+
+   case "WI_2_1":
+   	mContent[key] = (oInstruction);
+   break;
+   
+   case "reg_case":
+   	mContent[key] = (oTestCase);
+   break;
+   
+   case "reg_suite":
+   	mContent[key] = (oTestSuite);
+   
+   break;  
+   
+   case "reg_product":
+   	mContent[key] = (oProduct);
+   break;   
+   
+   case "reg_external_app":
+   	mContent[key] = (oExApp);
+   break; 
+        	
+   case "reg_group":
+   	mContent[key] = (oGroup);
+   break;   
+   
+   case "reg_user":
+   	mContent[key] = (oUser);
+   break;
+   
+   case "reg_cycle":
+   	mContent[key] = (oTestCycle);
+   break;   
+   
+   case "reg_plan":
+   	mContent[key] = (oTestPlan);
+   break;      
+   
+   case "WI_2_10":
+   	mContent[key] = (oTestCyclePlan);
+   break;        
+		
+   case "WI_2_11":
+   	mContent[key] = (oTest);
+	break;
+	
+   case "WI_2_12":
+   	mContent[key] = (oTest1);
+	break;    
+		
+   case "WI_3_1":
+         	//oShell.setContent(oMessage);
+   break;     
+         
+   //case "rpt_summary": //09/20/2017- summary page hidden per request
+   	//mContent[key] = (oSummaryReportView); // Summary by cycle
+   //break;     
+
+   case "rpt_summary": //09/20/2017 - catalog renamed to summary per request
+   	mContent[key] = (oCatalogByCycleReportView); // Summary by cycle
+   break;
+       	
+   case "rpt_suite":
+   		mContent[key] = (oSuiteByCycleReportView); // Summary by cycle
+   break;             
+   
+   case "rpt_detail":
+   		mContent[key] = (oDetailResultCycleReport); //detail by cycle
+   break;
+     	
+   case "rpt_result":
+   		mContent[key] = (oTestCaseReportView); // detail by case
+   break;
+     	
+   case "rpt_plan":
+	   mContent[key] = (oTestPlanReportView); // plan info
+   break;
+   	
+   case "rpt_detail":
+	   mContent[key] = (oSumByProductReport); //detail by cycle
+	break;
+	   
+   case "rpt_user":
+	   mContent[key] = (oCycleByUserReport); //detail by cycle
+	break;	   
+   
+   case "WI_3_8":
+   	mContent[key] = (oDetailReportTableView);
+   break;
+         	
+   case "chart_overview":
+   		mContent[key] = oTestLengthChart;
+   break;    
+   
+   case "WI_4_2":
+   		mContent[key] = oTestProcessChart;
+   break;
+   
+   case "WI_API":
+   		mContent[key] = oAPI;
+   break;
+         	
+   case "WI_FAQ":
+   		mContent[key] = oFAQ;
+   break;
+   
+   default:
+   		mContent[key] = oHTML;
+   break;
+	}
+	return mContent[key];
+}
+
+var urlParameters = document.location.hash;
+var content = getContent("home"); //initial content
+
+if (urlParameters) {
+	var urlParametersArray = urlParameters.split("&");
+	if (urlParametersArray.length == 1) {
+		urlParametersArray = urlParameters.split(" ");
+	}
+	var tabKey = urlParametersArray[0].split("#");
+	if (urlParametersArray.length > 1) {
+		for (var i = 1; i < urlParametersArray.length; i++) {
+			var param = urlParametersArray[i].split("=")
+			switch (param[0]) {
+			case "cycle":
+				sap.ui.getCore().setModel(param[1], tabKey[1] + "GlobalCycleValue");
+			break;
+			case "feature":
+				sap.ui.getCore().setModel(param[1], tabKey[1] + "GlobalFeatureValue");
+			break;
+			}
+		}
+	}
+	
+	content = getContent(tabKey[1]);
+	oShell.setSelectedWorksetItem(tabKey[1]);
+}
+oShell.setContent(content);
+oShell.placeAt("eimMain");
+
+//var awayCallback = function() {
+	//$.ajax({
+        //url: "/TestReports/logout.xscfunc",
+        //type: "POST",
+        //success: function(ret) {
+            //document.location.reload(true);
+        //}
+    //});
+//};
+
+//var idle = new Idle({
+	//onAway : awayCallback,
+	//awayTimeout : 300000
+//});
+
+//idle.start();
+
+$(document).ready(function() {
+
+//Check if the current URL contains '#' 
+if(document.URL.indexOf("#")==-1)
+{
+// Set the URL to whatever it was plus "#".
+url = document.URL+"#";
+location = "#";
+
+//Reload the page
+location.reload(true);
+
+}
+});
+
+</script>
+
+</head>
+
+<body class="sapUiBody" role="application" >
+
+      <div id="eimMain" ></div>
+
+</body>
+</html>

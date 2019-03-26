@@ -1,0 +1,11 @@
+{
+  "description": "Job to Consolidate All Cycle Result",
+  "action": "TestReports:Consolidate.xsjs::Call_SP_Consolidate",
+  "schedules":
+  [
+  {
+  "description": "All Cycle Result will be update every 10 minutes",
+  "xscron": "* * * * * 10 *"
+  }
+  ]
+}

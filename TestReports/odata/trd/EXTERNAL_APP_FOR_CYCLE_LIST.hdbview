@@ -1,0 +1,5 @@
+schema="EIMTRD";
+query="select a.cyc_tag, b.ts_name, d.*
+from EIMTRD.ETRD_TEST_CYCLES a INNER JOIN EIMTRD.ETRD_TEST_PLAN b ON a.cyc_id = b.cyc_id
+     inner join EIMTRD.ETRD_TP_EAPPS c on b.tsp_id = c.tsp_id
+     inner join EIMTRD.ETRD_EXTERNAL_APPS d on c.app_id = d.app_id";

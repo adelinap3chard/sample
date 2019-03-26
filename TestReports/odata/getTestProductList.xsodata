@@ -1,0 +1,4 @@
+service { "EIMTRD"."ETRD_PRODUCTS" as "LIST"
+	create using "TestReports.odata.trd:CreateTestProduct.xsjslib::CreateTestProduct"
+    update using "TestReports.odata.trd:UpdateTestProduct.xsjslib::UpdateTestProduct";
+}

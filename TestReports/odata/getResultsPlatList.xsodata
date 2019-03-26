@@ -1,0 +1,2 @@
+service { "EIMTRD"."TestReports.odata.trd::TEST_RESULTS_PLAT_LIST" as "LIST" keys ("PLAT_NAME");
+}

@@ -1,0 +1,355 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>Make statistics</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+<script id="sap-ui-bootstrap" type="text/javascript"
+	src="/sap/ui5/1/resources/sap-ui-core.js"
+	data-sap-ui-libs="sap.viz,sap.ui.commons,sap.ui.ux3,sap.ui.table,sap.suite.ui.commons"
+	data-sap-ui-theme="sap_goldreflection">
+	
+</script>
+
+<script type="text/javascript" src="lib/utilities.js"></script>
+<script type="text/javascript" src="lib/jszip.js"></script>
+<script type="text/javascript" src="lib/xlsx.js"></script>
+<script type="text/javascript" src="lib/FileSaver.js"></script>
+<script type="text/javascript" src="lib/date.js"></script>
+<script type="text/javascript" src="lib/lodash.min.js"></script>
+<script type="text/javascript" src="lib/idle.min.js"></script>
+	
+
+<!-- add sap.ui.table,sap.ui.ux3 and/or other libraries to 'data-sap-ui-libs' if required -->
+
+<script>
+	sap.ui.localResources("TestReport");
+    ///sap/ui5/1/resources/sap-ui-core.js
+	// Create the ux3 Shell
+	// ...fill several properties and aggregations in JSON syntax; alternatively they could also be set one by one
+	var oShell = new sap.ui.ux3.Shell(
+			"myShell",
+			{
+				appTitle : "Test Reporting power by Big Data Hub", // give a title
+				worksetItems : [ // add some items to the top navigation
+						new sap.ui.ux3.NavigationItem("wi_home", {
+							key : "wi_home",
+							text : "Home"
+						}), //wi = WorkItem :)
+						new sap.ui.ux3.NavigationItem({
+							key : "wi_registration",
+							text : "Registration",
+							subItems : [
+									new sap.ui.ux3.NavigationItem(
+											"wi_registration_suite", {
+												key : "wi_registration_suite",
+												text : "Suite"
+											}),
+									new sap.ui.ux3.NavigationItem(
+											"wi_registration_product", {
+												key : "wi_registration_product",
+												text : "Product"
+											}),
+									new sap.ui.ux3.NavigationItem(
+											"wi_registration_externalapp", {
+												key : "wi_registration_externalapp",
+												text : "External App"
+											}),
+									new sap.ui.ux3.NavigationItem(
+											"wi_registration_group", {
+												key : "wi_registration_group",
+												text : "Group"
+											}),
+									new sap.ui.ux3.NavigationItem(
+											"wi_registration_user", {
+												key : "wi_registration_user",
+												text : "User"
+											}),
+									new sap.ui.ux3.NavigationItem(
+											"wi_registration_cycle", {
+												key : "wi_registration_cycle",
+												text : "Cycle"
+											}),
+									new sap.ui.ux3.NavigationItem(
+											"wi_registration_testplan", {
+												key : "wi_registration_testplan",
+												text : "Test Plan"
+											}),
+									new sap.ui.ux3.NavigationItem(
+											"wi_registration_cycleplan", {
+												key : "wi_registration_cycleplan",
+												text : "Cycle Plan"
+											})]
+						}),
+						new sap.ui.ux3.NavigationItem({
+							key : "wi_logResult",
+							text : "Log Result",
+							subItems : [
+									new sap.ui.ux3.NavigationItem(
+											"wi_logResult_log", {
+												key : "wi_logResult_log",
+												text : "Log Test Result"
+											})]
+						}),
+						new sap.ui.ux3.NavigationItem({
+							key : "wi_report",
+							text : "Reports",
+							subItems : [
+									new sap.ui.ux3.NavigationItem(
+											"wi_report_sumary", {
+												key : "wi_report_sumary",
+												text : "Sumary"
+											}),
+									new sap.ui.ux3.NavigationItem(
+											"wi_report_catalog", {
+												key : "wi_report_catalog",
+												text : "Catalog by cycle"
+											}),
+									new sap.ui.ux3.NavigationItem(
+											"wi_report_suite", {
+												key : "wi_report_suite",
+												text : "Suite by cycle"
+											}),
+									new sap.ui.ux3.NavigationItem(
+											"wi_report_detail", {
+												key : "wi_report_detail",
+												text : "Detail by cycle"
+											}),
+									new sap.ui.ux3.NavigationItem(
+											"wi_report_case", {
+												key : "wi_report_case",
+												text : "Result by Case"
+											}),
+									new sap.ui.ux3.NavigationItem(
+											"wi_report_cycle", {
+												key : "wi_report_cycle",
+												text : "Plan by Cycle"
+											})]
+						}),
+						new sap.ui.ux3.NavigationItem({
+							key : "wi_statistic",
+							text : "Statistics",
+							subItems : [
+									new sap.ui.ux3.NavigationItem(
+											"wi_statistic_overview", {
+												key : "wi_statistic_overview",
+												text : "Overview"
+											}),
+									new sap.ui.ux3.NavigationItem(
+											"wi_statistic_detail", {
+												key : "wi_statistic_detail",
+												text : "Details"
+											})]
+						}),
+						new sap.ui.ux3.NavigationItem({
+							key : "wi_doc",
+							text : "Documentation",
+							subItems : [
+									new sap.ui.ux3.NavigationItem(
+											"wi_doc_api", {
+												key : "wi_doc_api",
+												text : "API usage"
+											}),
+									new sap.ui.ux3.NavigationItem(
+											"wi_doc_ui", {
+												key : "wi_doc_ui",
+												text : "UI usage"
+											})]
+						})]
+			});
+
+	// Page content creation - for each workset the content is defined here 
+	var mContent = {}; // a map to remember page content once it is created
+	function getContent(key) {
+		if (mContent[key])
+			return mContent[key]; // if content is already created, return it directly
+
+		if (key == "wi_home") {
+			mContent[key] = sap.ui.view({
+				id : "Start",
+				viewName : "TestReports.Start",
+				type : sap.ui.core.mvc.ViewType.JS
+			});
+		//registration page
+		} else if (key == "wi_registration_suite") {
+			mContent[key] = sap.ui.view({
+				id : "Suite",
+				viewName : "TestReports.forms.testsuite",
+				type : sap.ui.core.mvc.ViewType.JS
+			});
+		} else if (key == "wi_registration_product") {
+			mContent[key] = sap.ui.view({
+				id : "Product",
+				viewName : "TestReports.forms.testproduct",
+				type : sap.ui.core.mvc.ViewType.JS
+			});
+		} else if (key == "wi_registration_externalapp") {
+			mContent[key] = sap.ui.view({
+				id : "ExternalApp",
+				viewName : "TestReports.forms.testexapp",
+				type : sap.ui.core.mvc.ViewType.JS
+			});
+		} else if (key == "wi_registration_group") {
+			mContent[key] = sap.ui.view({
+				id : "UserGroup",
+				viewName : "TestReports.forms.testgroup",
+				type : sap.ui.core.mvc.ViewType.JS
+			});
+		} else if (key == "wi_registration_user") {
+			mContent[key] = sap.ui.view({
+				id : "User",
+				viewName : "TestReports.forms.testuser",
+				type : sap.ui.core.mvc.ViewType.JS
+			});
+		} else if (key == "wi_registration_cycle") {
+			mContent[key] = sap.ui.view({
+				id : "Cycle",
+				viewName : "TestReports.forms.testcycle",
+				type : sap.ui.core.mvc.ViewType.JS
+			});
+		} else if (key == "wi_registration_testplan") {
+			mContent[key] = sap.ui.view({
+				id : "Plan",
+				viewName : "TestReports.forms.testplan",
+				type : sap.ui.core.mvc.ViewType.JS
+			});
+		} else if (key == "wi_registration_cycleplan") {
+			mContent[key] = sap.ui.view({
+				id : "CyclePlan",
+				viewName : "TestReports.forms.testcycleplan",
+				type : sap.ui.core.mvc.ViewType.JS
+			});
+		// log result page
+		} else if (key == "wi_logResult_log") {
+			mContent[key] = sap.ui.view({
+				id : "LogDetailest",
+				viewName : "TestReports.forms.detail",
+				type : sap.ui.core.mvc.ViewType.JS
+			});	
+		//report page
+		} else if (key == "wi_report_sumary") {
+			mContent[key] = sap.ui.view({
+				id : "SumaryTestReport",
+				viewName : "TestReports.reports.sumCycleReport",
+				type : sap.ui.core.mvc.ViewType.JS
+			}); 
+		} else if (key == "wi_report_catalog") {
+			mContent[key] = sap.ui.view({
+				id : "CatalogByCycleTestReport",
+				viewName : "TestReports.reports.sumCatalogbyCycleReport",
+				type : sap.ui.core.mvc.ViewType.JS
+			});
+		} else if (key == "wi_report_suite") {
+			mContent[key] = sap.ui.view({
+				id : "SuiteByCycleTestReport",
+                viewName : "TestReports.reports.suiteByCycleReport",
+				type : sap.ui.core.mvc.ViewType.JS
+			});
+		} else if (key == "wi_report_detail") {
+			mContent[key] = sap.ui.view({
+				id : "DetailResultcycleReport",
+                viewName : "TestReports.reports.detailResultCycleReport",
+				type : sap.ui.core.mvc.ViewType.JS
+			});
+		} else if (key == "wi_report_case") {
+			mContent[key] = sap.ui.view({
+				id : "TestCaseReport",
+                viewName : "TestReports.reports.testcasereport",
+				type : sap.ui.core.mvc.ViewType.JS
+			});
+		} else if (key == "wi_report_plan") {
+			mContent[key] = sap.ui.view({
+				id : "TestPlanReport",
+                viewName : "TestReports.reports.testplanreport",
+				type : sap.ui.core.mvc.ViewType.JS
+			});			
+		//statistic page			
+		} else if (key == "wi_statistic_overview") {
+			mContent[key] = sap.ui.view({
+				id : "TestRuntimeTable",
+				viewName : "businessLogic.TestRuntime.Table",
+				type : sap.ui.core.mvc.ViewType.JS
+			});
+		} else if (key == "wi_statistic_detail") {
+			mContent[key] = sap.ui.view({
+				id : "TestRuntimeChart",
+				viewName : "businessLogic.TestRuntime.Chart",
+				type : sap.ui.core.mvc.ViewType.JS
+			});
+		// doc page
+		} else if (key == "wi_doc_api") {
+			mContent[key] = sap.ui.view({
+				id : "LoCOverview",
+				viewName : "businessLogic.LinesOfCode.Overview",
+				type : sap.ui.core.mvc.ViewType.JS
+			});
+		} else if (key == "wi_doc_ui") {
+			mContent[key] = sap.ui.view({
+				id : "LoCTable",
+				viewName : "businessLogic.LinesOfCode.Table",
+				type : sap.ui.core.mvc.ViewType.JS
+			});
+		}
+		return mContent[key];
+	}
+
+	// when the user selects a workset, put the respective content into the shell's main area
+	oShell.attachWorksetItemSelected(function(oEvent) {
+		var key = oEvent.getParameter("key");
+		oShell.setContent(getContent(key));
+	});
+
+	// set the initial content of the Shell - the Home Overview is selected initially
+	var urlParameters = document.location.hash;
+
+	var content = getContent("wi_home"); //initial content
+
+	if (urlParameters) {
+
+		var urlParametersArray = urlParameters.split("%20");
+		if (urlParametersArray.length == 1) {
+			urlParametersArray = urlParameters.split(" ");
+		}
+		var tabKey = urlParametersArray[0].split("#");
+
+		if (urlParametersArray.length > 1) { //not only overview page
+
+			var timeIndex = 0;
+
+			switch (urlParametersArray[2]) {
+			case "weekly":
+				timeIndex = 1;
+				break;
+			case "monthly":
+				timeIndex = 2;
+				break;
+			}
+			//updating the gloabl variables
+			sap.ui.getCore().byId("globalBranchList").setValue(
+					urlParametersArray[4]);
+			sap.ui.getCore().byId("globalBuildPurposeList").setValue(
+					urlParametersArray[6]);
+			sap.ui.getCore().byId("globalTypeList").setValue(
+					urlParametersArray[8]);
+			sap.ui.getCore().byId("globalPlatformList").setValue(
+					urlParametersArray[10]);
+			sap.ui.getCore().byId("globalTimeDimensions").setSelectedIndex(
+					timeIndex);
+
+		}
+
+		content = getContent(tabKey[1]);
+		oShell.setSelectedWorksetItem(tabKey[1]);
+	}
+
+	oShell.setContent(content);
+
+	// place the Shell into the <div> element defined below
+	oShell.placeAt("content");
+</script>
+
+</head>
+<body class="sapUiBody" role="application">
+	<div id="content"></div>
+</body>
+</html>

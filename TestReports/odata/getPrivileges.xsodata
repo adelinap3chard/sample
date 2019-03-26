@@ -1,0 +1,2 @@
+service { "EIMTRD"."TestReports.odata.trd::PRIVILEGES" as "LIST"  keys ("PRIVILEGE");
+}

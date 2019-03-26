@@ -1,0 +1,4 @@
+service { "EIMTRD"."ETRD_TEST_CASES" as "LIST"
+	create using "TestReports.odata.trd:CreateTestCase.xsjslib::CreateTestCase"
+    update using "TestReports.odata.trd:UpdateTestCase.xsjslib::UpdateTestCase";   
+}

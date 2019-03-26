@@ -1,0 +1,4 @@
+service { "EIMTRD"."ETRD_GROUPS" as "LIST"
+	create using "TestReports.odata.trd:CreateTestGroup.xsjslib::CreateTestGroup"
+    update using "TestReports.odata.trd:UpdateTestGroup.xsjslib::UpdateTestGroup";
+}

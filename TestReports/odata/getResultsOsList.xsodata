@@ -1,0 +1,2 @@
+service { "EIMTRD"."TestReports.odata.trd::TEST_RESULTS_OS_LIST" as "LIST" keys ("OS_NAME");
+}

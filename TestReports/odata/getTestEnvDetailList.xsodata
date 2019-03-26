@@ -1,0 +1,4 @@
+service { "EIMTRD"."ETRD_DETAILS" as "LIST"
+	create using "TestReports.odata.trd:CreateTestEnvDetail.xsjslib::CreateTestEnvDetail"
+    update using "TestReports.odata.trd:UpdateTestEnvDetail.xsjslib::UpdateTestEnvDetail";
+}

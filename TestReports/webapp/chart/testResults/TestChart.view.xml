@@ -1,0 +1,7 @@
+<core:View xmlns:core="sap.ui.core" xmlns:mvc="sap.ui.core.mvc"
+	xmlns="sap.m"  controllerName="TestReports.chart.testResults.TestChart"
+	xmlns:viz="sap.viz.ui5.controls" 
+	xmlns:html="http://www.w3.org/1999/xhtml">
+	<viz:VizFrame xmlns="sap.viz" id="idcolumn" >
+	</viz:VizFrame>
+</core:View>

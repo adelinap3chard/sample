@@ -1,0 +1,5 @@
+service { "EIMTRD"."ETRD_TEST_FEATURES" as "LIST"
+	create using "TestReports.odata.trd:CreateTestFeature.xsjslib::CreateTestFeature"
+    update using "TestReports.odata.trd:UpdateTestFeature.xsjslib::UpdateTestFeature";
+    
+}

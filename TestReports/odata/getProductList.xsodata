@@ -1,0 +1,2 @@
+service { "EIMTRD"."TestReports.odata.trd::PRODUCT_LIST" as "LIST" keys("PRO_NAME");
+}

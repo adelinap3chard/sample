@@ -1,0 +1,4 @@
+schema="EIMTRD";
+query="select a.TS_NAME, c.TC_NAME
+from EIMTRD.ETRD_TEST_SUITES a inner join EIMTRD.ETRD_SUITES_CASES b on a.ts_id = b.ts_id
+	inner join EIMTRD.ETRD_TEST_CASES c on b.tc_id = c.tc_id";

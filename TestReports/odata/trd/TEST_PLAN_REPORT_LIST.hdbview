@@ -1,0 +1,27 @@
+schema="EIMTRD";
+query="select
+	b.ts_name,
+	f.tc_name,
+    c.pro_name,
+	c.pro_ver,
+	b.plat_name,
+	b.os_name,
+	a.startdate,
+	a.enddate,
+	b.assginee,
+	a.contractor,
+	a.cyc_tag,
+	b.feature,
+	b.catalog
+from EIMTRD.ETRD_TEST_CYCLES a,
+	 EIMTRD.ETRD_TEST_PLAN b,
+	 EIMTRD.ETRD_PRODUCTS c,
+	 EIMTRD.ETRD_TEST_SUITES d,
+	 EIMTRD.ETRD_SUITES_CASES e,
+	 EIMTRD.ETRD_TEST_CASES f 
+where a.cyc_id = b.cyc_id 
+and b.pro_id = c.pro_id 
+and b.ts_name = d.ts_name 
+and d.ts_id = e.ts_id 
+and e.tc_id = f.tc_id
+order by a.cyc_tag";

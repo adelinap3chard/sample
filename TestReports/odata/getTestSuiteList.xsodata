@@ -1,0 +1,5 @@
+service { "EIMTRD"."TestReports.odata.trd::TEST_SUITE_LIST" as "LIST" keys ("TS_NAME", "PRO_NAME")
+	create using "TestReports.odata.trd:TestSuite.xsjslib::CreateTestSuite"
+    update using "TestReports.odata.trd:TestSuite.xsjslib::UpdateTestSuite"
+    delete using "TestReports.odata.trd:TestSuite.xsjslib::DeleteTestSuite";
+}

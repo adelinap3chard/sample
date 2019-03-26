@@ -1,0 +1,9 @@
+schema="EIMTRD";
+query="select a.CYC_TAG, d.TS_NAME, f.TC_NAME, b.ASSGINEE, b.PLAT_NAME, b.OS_NAME, '' TC_RESULT, '' BUG_ID
+from EIMTRD.ETRD_TEST_CYCLES a inner join EIMTRD.ETRD_TEST_PLAN b on a.cyc_id = b.cyc_id
+	inner join EIMTRD.ETRD_TEST_SUITES d on b.ts_name = d.ts_name
+	inner join EIMTRD.ETRD_SUITES_CASES e on d.ts_id = e.ts_id
+	inner join EIMTRD.ETRD_TEST_CASES f on e.tc_id = f.tc_id";
+	
+	
+	

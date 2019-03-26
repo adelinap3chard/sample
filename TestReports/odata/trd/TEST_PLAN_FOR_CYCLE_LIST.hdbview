@@ -1,0 +1,28 @@
+schema="EIMTRD";
+query="select
+	b.ts_name,
+    c.pro_name,
+	c.pro_ver,
+	b.plat_name,
+	b.os_name,
+	a.startdate,
+	a.enddate,
+	b.assginee,
+	a.contractor,
+	a.cyc_tag,
+	b.feature,
+	b.catalog,
+	e.ENV
+from EIMTRD.ETRD_TEST_CYCLES a INNER JOIN EIMTRD.ETRD_TEST_PLAN b ON a.cyc_id = b.cyc_id
+	 INNER JOIN EIMTRD.ETRD_PRODUCTS c ON b.pro_id = c.pro_id
+	 INNER JOIN EIMTRD.ETRD_TEST_SUITES d ON b.ts_name = d.ts_name
+	 LEFT OUTER JOIN (select
+						b.tsp_id,
+						STRING_AGG(f.DETAIL_NAME || '=' || f.DETAIL_VALUE,';' ORDER BY f.DETAIL_NAME) AS ENV
+	  					from 
+	 						EIMTRD.ETRD_TEST_PLAN b,
+	 						EIMTRD.ETRD_TP_DETAILS e,
+	 						EIMTRD.ETRD_DETAILS f
+	  					where b.tsp_id = e.tsp_id
+	 					and e.detail_id = f.detail_id
+	  					group by b.tsp_id) e ON b.tsp_id = e.tsp_id";

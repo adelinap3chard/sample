@@ -1,0 +1,6 @@
+service { "EIMTRD"."TestReports.odata.trd::TEST_PLAN_LIST" as "LIST" keys ("TSP_ID", "PRO_NAME")
+	create using "TestReports.odata.trd:CreateTestPlan.xsjslib::CreateTestPlan"
+    update using "TestReports.odata.trd:UpdateTestPlan.xsjslib::UpdateTestPlan"
+    delete using "TestReports.odata.trd:DeleteTestPlan.xsjslib::DeleteTestPlan";
+    
+}

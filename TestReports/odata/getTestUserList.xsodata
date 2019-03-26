@@ -1,0 +1,6 @@
+service { "EIMTRD"."TestReports.odata.trd::TEST_vUSER_LIST" as "LIST" keys ("U_ID")
+	create using "TestReports.odata.trd:CreateTestUser.xsjslib::CreateTestUser"
+    update using "TestReports.odata.trd:UpdateTestUser.xsjslib::UpdateTestUser"
+    delete using "TestReports.odata.trd:DeleteTestUser.xsjslib::DeleteTestUser";
+    
+}

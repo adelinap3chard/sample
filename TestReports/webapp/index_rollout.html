@@ -1,0 +1,210 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>EIM Test reports</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+
+<!DOCTYPE HTML>
+<html> <!-- Removed this page from Demokit content, as it is rather a sample, that should go into TestSuite content -->
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta charset="UTF-8"/>
+		<meta name="keywords" content="Control Shell" />
+		<title>EIM Test Reports</title>
+		
+
+		<script id="sap-ui-bootstrap" type="text/javascript"
+			src="/sap/ui5/1/resources/sap-ui-core.js"
+			data-sap-ui-libs="sap.viz,sap.ui.commons,sap.ui.ux3,sap.ui.table,sap.suite.ui.commons"
+			data-sap-ui-theme="sap_bluecrystal"
+			data-sap-language="en"
+			data-sap-ui-resourceroots='{
+				"TestReports": "./"
+			}'>
+		</script>
+		<!-- data-sap-ui-theme="sap_goldreflection" -->
+		
+		<script type="text/javascript" src="lib/utilities.js"></script>
+		<!-- add sap.ui.table,sap.ui.ux3 and/or other libraries to 'data-sap-ui-libs' if required -->
+		
+		<script>
+
+
+			var oHTML = new sap.ui.core.HTML("myContent",{
+				content: '<div>'+
+			  '<div id="sample1code" ><br><br>Hello! <br><br> Server has been taken down for new changes and roll out. '+
+			  'Please save all your changes in an excel sheet and update at a later time. <br><br>'+
+			  'If you have any questions or ideas for improvement, please feel free to send your request on our wiki page:  <br> <a href="https://jam4.sapjam.com/groups/about_page/oVpmUa55yTVGjyEBd9VJGO" target="_blank ">HANA EIM Infrastructure Development</a> '+ 
+			  '<br><br> Best regards,<br>your HANA EIM Infrastructure (US) team</div>'+'</div>'
+			});
+			
+			oHTML.addEventDelegate({
+				onAfterRendering: function(){
+					//oShell.setContent(oMessage);
+					//sap.ui.getCore().byId("csc1").placeAt("sample1code");
+				}
+			});
+
+			oMessage = new sap.ui.commons.TextView("myMessage",{
+				text: "This page is under construction"
+			});
+			
+			//manual input overview test record
+			oRecordTest =  sap.ui.view({
+				id : "RecordTest",
+				viewName : "TestReports.forms.overview",
+				type : sap.ui.core.mvc.ViewType.JS
+			});
+			
+			//oRegisterTestCase =  sap.ui.view({
+				//id : "RegTestCase",
+				//viewName : "TestReports.forms.regtestcase",
+				//type : sap.ui.core.mvc.ViewType.JS
+			//});
+			
+			//overview report
+			oOverAllReportableView = sap.ui.view({
+				id : "OverallTestReport",
+				viewName : "TestReports.reports.all.view.all",
+				type : sap.ui.core.mvc.ViewType.JS
+			});
+			
+			//details report
+			oDetailReportTableView = sap.ui.view({
+				id : "DetailTestReport",
+				viewName : "TestReports.view.Table",
+				type : sap.ui.core.mvc.ViewType.JS
+			});
+			
+			oTestProcessChart = sap.ui.view({
+				id : "TestProcessChart",
+				viewName : "TestReports.chart.testResults.TestChart",
+				type : sap.ui.core.mvc.ViewType.XML
+			});
+			
+			oTestLengthChart = sap.ui.view({
+				id : "TestLengthChart",
+				viewName : "TestReports.chart.testResults.Chart",
+				type : sap.ui.core.mvc.ViewType.JS
+			});
+	
+			oButton= new sap.ui.commons.Button("myButton",{
+				text: "Click me!",
+				tooltip: "please click me",
+				press: function(oEvent){alert("Thank you for clicking me!");}
+			});
+
+			oImage=  new sap.ui.commons.Image("myImage",{
+				src: "images/SAPLogo.gif",
+				width: "100%",
+				alt: "Hete should be an image.",
+				tooltip: "This is an image",
+				decorative: false
+			});
+
+			var oAPI = new sap.ui.core.HTML("API",{
+				content: '<div>'+
+				'<iframe src="http://qadb-test.wdf.sap.corp:8000/infrastructure_api/webapp/iindex.html" width="100%" height="400px" name="API">'+
+				'</iframe>'+
+				'</div>'
+			});
+		</script>
+
+<script id='Script1'>
+var oShell = new sap.ui.ux3.Shell("myShell", {
+	appTitle: "EIM Infrastructure",
+	appIcon: "images/SAPLogo.gif",
+	appIconTooltip: "SAP logo",
+	showLogoutButton: true,
+	showSearchTool: true,
+	showInspectorTool: true,
+	showFeederTool: true,
+	worksetItems: [new sap.ui.ux3.NavigationItem("WI_home",{key:"wi_home",text:"Home"}),
+	               ],
+					
+	paneBarItems: [ new sap.ui.core.Item("PI_Date",{key:"pi_date",text:"date"}),
+	                new sap.ui.core.Item("PI_Browser",{key:"pi_browser",text:"browser"})],
+	content: oHTML,
+	headerItems: [new sap.ui.commons.MenuButton({
+									text: "Help",
+									tooltip: "Help Menu",
+									menu: new sap.ui.commons.Menu("menu1",{items:[
+										new sap.ui.commons.MenuItem("menuitem1",{text:"Help"}),
+										new sap.ui.commons.MenuItem("menuitem2",{text:"Report Incident"}),
+										new sap.ui.commons.MenuItem("menuitem3",{text:"About"})]})
+								})],
+	worksetItemSelected: function(oEvent){
+		var sId = oEvent.getParameter("id");
+		var oShell = oEvent.oSource;
+		switch (sId) {
+		//home tab - HOME MESSAGE
+		case "WI_home":
+			oShell.setContent(oHTML);
+			break;
+			
+		//first tab - LOG TEST RESULT
+		case "WI_1_1":
+			//oShell.setContent(oRegisterTestCase);
+			oShell.setContent(oMessage);
+			break;
+		case "WI_1_2":
+			oShell.setContent(oRecordTest);
+			break;
+	
+		//second tab - REPORTS VIEW
+		case "WI_2_1":
+			oShell.setContent(oOverAllReportableView);
+			break;
+		case "WI_2_2":
+			oShell.setContent(oDetailReportTableView);
+			break;	
+			
+		//third tab - REPORT STATISTIC
+		case "WI_3_1":
+			oShell.setContent(oTestLengthChart);
+			//oShell.setContent(oTextFunc);
+			break;	
+		case "WI_3_2":
+			oShell.setContent(oTestProcessChart);
+			break;
+		default:
+			break;
+		}
+	},
+	paneBarItemSelected: function(oEvent){
+		var sKey = oEvent.getParameter("key");
+		var oShell = oEvent.oSource;
+		switch (sKey) {
+		case "pi_date":
+			var oDate = new Date();
+			oShell.setPaneContent(new sap.ui.commons.TextView({text:oDate.toLocaleString()}), true);
+			break;
+		case "pi_browser":
+			oShell.setPaneContent(new sap.ui.commons.TextView({text:"You browser provides the following information:\n"+navigator.userAgent}), true);
+			break;
+		default:
+			break;
+		}
+	},
+	logout:function(){
+		alert("Logout Button has been clicked.\nThe application can now do whatever is required.");
+	},
+ 	search:function(oEvent){
+ 		alert("Search triggered: " + oEvent.getParameter("text"));
+ 	},
+ 	feedSubmit:function(oEvent){
+ 		alert("Feed entry submitted: " + oEvent.getParameter("text"));
+ 	},
+ 	paneClosed : function(oEvent) {
+ 	    alert("Pane has been closed: " + oEvent.getParameter("id"));
+ 	}
+}).placeAt("sample1");
+</script>
+
+</head>
+
+<body class="sapUiBody" role="application">
+	<div id="sample1" ></div>
+</body>
+</html>

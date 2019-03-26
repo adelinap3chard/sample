@@ -1,0 +1,4 @@
+//service { "TESTER"."TR_DS_TESTSTATUS" as "LIST" keys ("PLATFORM", "PRODUCTVERSION", "TESTCASE", "TEST_STATUS", "DB", "TESTER", "SCH_DATE", "CODEPAGE");}
+
+service { "EIMTRD"."TestReports.odata.trd::TEST_STATUS_LIST" as "LIST" keys ("TEST_STATUS");
+}

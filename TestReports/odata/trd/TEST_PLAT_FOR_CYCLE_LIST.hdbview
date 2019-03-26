@@ -1,0 +1,8 @@
+schema="EIMTRD";
+query="select distinct
+	b.assginee,
+	b.plat_name,
+	a.cyc_tag
+from EIMTRD.ETRD_TEST_CYCLES a,
+	 EIMTRD.ETRD_TEST_PLAN b
+where a.cyc_id = b.cyc_id";

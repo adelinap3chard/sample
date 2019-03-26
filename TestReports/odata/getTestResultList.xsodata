@@ -1,0 +1,5 @@
+service { "EIMTRD"."ETRD_TEST_RESULTS" as "LIST"
+	create using "TestReports.odata.trd:CreateDetailTestResult.xsjslib::CreateDetailTestResult"
+    update using "TestReports.odata.trd:UpdateDetailTestResult.xsjslib::UpdateDetailTestResult"
+    delete using "TestReports.odata.trd:DeleteDetailTestResult.xsjslib::DeleteDetailTestResult";   
+}

@@ -1,0 +1,3 @@
+service { "EIMTRD"."TestReports.odata.trd::TEST_PLAT_FOR_CYCLE_LIST" as "LIST" keys ("CYC_TAG", "ASSGINEE", "PLAT_NAME");
+
+}

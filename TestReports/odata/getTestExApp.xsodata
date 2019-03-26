@@ -1,0 +1,4 @@
+service { "EIMTRD"."ETRD_EXTERNAL_APPS" as "LIST"
+	create using "TestReports.odata.trd:CreateTestExApp.xsjslib::CreateTestExApp"
+    update using "TestReports.odata.trd:UpdateTestExApp.xsjslib::UpdateTestExApp";
+}

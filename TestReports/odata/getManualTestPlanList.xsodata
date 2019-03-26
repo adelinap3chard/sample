@@ -1,0 +1,2 @@
+service { "EIMTRD"."TestReports.odata.trd::TEST_MANUAL_PLAN_LIST" as "LIST" keys ("TEST_PLAN");
+}
