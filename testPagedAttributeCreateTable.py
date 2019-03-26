@@ -5,13 +5,7 @@
 # Author : Denis de O   (d.oliveira@sap.com)
 # 
 # Please see http://trexweb.wdf.sap.corp:1080/wiki/index.php/Unit_Test_Framework
-# for a detailed explanation.
-#
-# History :
-#                         Created : Denis de O  - 2/19/2013
-#                         Update  : Denis de O  - 3/26/2013
-#                                   Denis de O  - 5/7/2013   Enable tests / Skipped test19/22
-#                                   Denis de O  - 5/29/2013  Fix the order of the tests                                    
+# for a detailed explanation.                                 
 #################################################################################
 
 from lib.SqlTestCase import SqlTestCase
