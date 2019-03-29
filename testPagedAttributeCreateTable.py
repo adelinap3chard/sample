@@ -1,8 +1,5 @@
 #################################################################################
 # Test suite : testPagedAttributeCreateTable.py
-#
-# DDL tests : Create Column table Using Hana datatypes
-# Author : Denis de O   (d.oliveira@sap.com)
 # 
 # Please see http://trexweb.wdf.sap.corp:1080/wiki/index.php/Unit_Test_Framework
 # for a detailed explanation.                                 
